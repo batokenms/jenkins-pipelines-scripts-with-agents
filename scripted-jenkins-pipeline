@@ -1,7 +1,7 @@
-node('jenkins-slave') { // Use the 'jenkins-slave' agent
+node('jenkin-agent') { // Use the 'jenkin-agent' agent
 
     stage("Git Clone") {
-        git credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/joshking1/spring-boot-mongo-docker.git'
+        git credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/batokenms/spring-boot-mongo-docker.git'
     }
     stage('Maven Clean Build') {
         def mavenHome = tool name: "Maven-3.8.6", type: "maven"
