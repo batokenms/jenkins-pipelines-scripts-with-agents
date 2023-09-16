@@ -1,0 +1,48 @@
+pipeline {
+    agent { label 'jenkins-slave' } // Use the 'jenkins-slave' agent
+
+    options {
+        timestamps()
+    }
+
+    tools {
+        // Define the Maven tool with the specified name and version
+        maven 'Maven-3.8.4'
+    }
+
+    stages {
+        stage("Git Checkout") {
+            steps {
+                // Use your GitHub credentials to clone the repository
+                git credentialsId: 'GIT_HUB_CREDENTIALS', url: 'https://github.com/joshking1/myRepoForJavaApp.git'
+            }
+        }
+        stage("Maven Clean Build") {
+            steps {
+                // Run Maven clean and install commands
+                sh 'mvn clean install -f MyWebApp/pom.xml'
+            }
+        }
+        stage("SonarQube Analysis") {
+            steps {
+                // Run SonarQube analysis using Maven
+                withSonarQubeEnv('josh') {
+                    sh 'mvn clean install -f MyWebApp/pom.xml sonar:sonar'
+                }
+            }
+        }
+
+        stage("Docker Images") {
+            steps {
+                // List Docker images
+                sh 'docker images'
+            }
+        }
+        stage("Docker Version") {
+            steps {
+                // Check Docker version
+                sh 'docker -v'
+            }
+        }
+    }
+}
